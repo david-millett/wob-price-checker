@@ -1,7 +1,13 @@
 # from urllib.request import urlopen
 # import re
 
-url = 'https://www.worldofbooks.com/en-gb/products/sword-art-online-9-book-reki-kawahara-9780316390422'
+class Book:
+    def __init__(self, name, url, price):
+        self.name = name
+        self.url = url
+        self.price = price
+
+SAO9 = Book("SAO9", 'https://www.worldofbooks.com/en-gb/products/sword-art-online-9-book-reki-kawahara-9780316390422', 0)
 
 # def extract_data(url):
 #     page = urlopen(url)
@@ -16,12 +22,19 @@ url = 'https://www.worldofbooks.com/en-gb/products/sword-art-online-9-book-reki-
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 
-driver = webdriver.Chrome()
+options = Options()
+options.add_argument("--headless")
+driver = webdriver.Chrome(options=options)
 
-driver.get(url)
+driver.get(SAO9.url)
 
-price = driver.find_element(By.CLASS_NAME, "price-item").text
-print(price)
+try:
+    SAO9.price = driver.find_element(By.CLASS_NAME, "price-item").text
+except:
+    SAO9.price = "Price not found"
+
+print(f'{SAO9.name} Price: {SAO9.price}')
 
 driver.quit()
