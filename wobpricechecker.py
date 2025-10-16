@@ -16,9 +16,13 @@ def get_price(book):
     driver.get(book.url)
     try:
         book.price = driver.find_element(By.CLASS_NAME, "price-item").text
+        book.rrp = driver.find_element(By.CLASS_NAME, "rrp").text.replace(" ", "")
     except:
         book.price = "Price not found"
-    print(f'{book.name} Price: {book.price}')
+    price_number = float(book.price.replace("£", ""))
+    rrp_number = float(book.rrp.replace("£", ""))
+    discount = round((rrp_number - price_number)/rrp_number*100)
+    print(f'{book.name} Price: {book.price} ({discount}% off {book.rrp})')
 
 # Run
 for book in books:
